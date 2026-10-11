@@ -17,6 +17,8 @@
   --gold:#9A763C; --gold-soft:#F3EAD8; --alert:#A3402F; --alert-soft:#F8EAE5;
   --amber:#A15F12; --amber-soft:#F8EDDB; --ok:#3B6A4A; --ok-soft:#E6EFE4;
   --sans:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --p-ciel:#E1ECF4; --i-ciel:#4A7CA6; --p-lavande:#EAE3F4; --i-lavande:#7C63AA; --p-menthe:#DFEFE5; --i-menthe:#4A8C66;
+  --p-peche:#FBE9D9; --i-peche:#BF7A3F; --p-rose:#F8E3E7; --i-rose:#B65A6D; --p-sable:#ECE7DA; --i-sable:#857451;
   --nav:0px;
   box-sizing:border-box;
 }
@@ -25,12 +27,16 @@
     --bg:#141312; --surface:#1C1B19; --ink:#F0EBE1; --muted:#BDB4A6; --line:#34312C;
     --gold:#D2B071; --gold-soft:#2B2519; --alert:#EE9A86; --alert-soft:#2E1C18;
     --amber:#E5AE62; --amber-soft:#2D2416; --ok:#95C9A2; --ok-soft:#1B2A1F;
+    --p-ciel:#1F2A33; --i-ciel:#8DB7DA; --p-lavande:#282233; --i-lavande:#B7A3DB; --p-menthe:#1D2B23; --i-menthe:#8FCBA6;
+    --p-peche:#33271C; --i-peche:#E3A874; --p-rose:#33222A; --i-rose:#E39AAB; --p-sable:#2B2820; --i-sable:#CDBB92;
   }
 }
 :root[data-theme="dark"]{
   --bg:#141312; --surface:#1C1B19; --ink:#F0EBE1; --muted:#BDB4A6; --line:#34312C;
   --gold:#D2B071; --gold-soft:#2B2519; --alert:#EE9A86; --alert-soft:#2E1C18;
   --amber:#E5AE62; --amber-soft:#2D2416; --ok:#95C9A2; --ok-soft:#1B2A1F;
+  --p-ciel:#1F2A33; --i-ciel:#8DB7DA; --p-lavande:#282233; --i-lavande:#B7A3DB; --p-menthe:#1D2B23; --i-menthe:#8FCBA6;
+  --p-peche:#33271C; --i-peche:#E3A874; --p-rose:#33222A; --i-rose:#E39AAB; --p-sable:#2B2820; --i-sable:#CDBB92;
 }
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
@@ -42,18 +48,58 @@ button{cursor:pointer;background:none;border:0;padding:0;text-align:inherit}
 svg{flex:none}
 
 /* En-tête et navigation */
-header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding-top:env(safe-area-inset-top,0px)}
-.brand{font-size:26px;font-weight:500;letter-spacing:-.01em}
+header.top{flex-wrap:wrap;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding-top:env(safe-area-inset-top,0px)}
+.brand{white-space:nowrap;font-size:26px;font-weight:500;letter-spacing:-.01em}
 .top-droite{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
 .btn-cloud{display:inline-flex;align-items:center;gap:6px;font-size:15px;min-height:44px}
 .btn-cloud svg{width:16px;height:16px}
+.actions-top{display:flex;gap:8px}
+.ico{position:relative;display:inline-grid;place-items:center;width:48px;height:48px;background:var(--p);color:var(--i);border:1px solid transparent;cursor:pointer}
+.ico svg{width:24px;height:24px}
+.ico:hover,.ico:focus-visible{border-color:var(--i)}
+.ico[hidden]{display:none}
+.ico.ciel{--p:var(--p-ciel);--i:var(--i-ciel)}
+.ico.menthe{--p:var(--p-menthe);--i:var(--i-menthe)}
+.ico.sable{--p:var(--p-sable);--i:var(--i-sable)}
+.ico.alerte{--p:var(--amber-soft);--i:var(--amber)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#toast{position:fixed;left:16px;right:16px;top:calc(12px + env(safe-area-inset-top,0px));z-index:70;max-width:560px;margin:0 auto;padding:14px 18px;font-size:18px;line-height:1.4;font-weight:500;color:var(--ink);background:var(--p-menthe);border:1px solid var(--i-menthe);opacity:0;transform:translateY(-12px);pointer-events:none;transition:opacity .2s,transform .2s}
+#toast.on{opacity:1;transform:none}
+#toast.attention{background:var(--amber-soft);border-color:var(--amber)}
+#bulle{position:fixed;z-index:60;max-width:min(280px,calc(100vw - 16px));padding:10px 14px;background:var(--ink);color:var(--bg);font-size:16px;line-height:1.4;pointer-events:none;opacity:0;transition:opacity .12s}
+#bulle.on{opacity:1}
+#lastbk::before{content:"· "}
+.mois-extremes .mx{margin:12px 0 0;padding:12px 16px}
+.mois-extremes .mx-bon{background:var(--p-menthe)}
+.mois-extremes .mx-dur{background:var(--p-rose)}
+.mois-extremes .mx-t{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:17px;font-weight:500}
+.mois-extremes .mx-bon svg{color:var(--i-menthe)}.mois-extremes .mx-dur svg{color:var(--i-rose)}
+.mois-extremes .ligne{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:18px}
+.mode-court{margin:0 0 14px}
+.mode-court>summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;background:var(--p-sable);color:var(--ink);font-size:16px;cursor:pointer;list-style:none}
+.mode-court>summary::-webkit-details-marker{display:none}
+.mode-court>summary svg{width:20px;height:20px;color:var(--i-sable)}
+.mode-court[open]>summary{margin-bottom:12px}
+.comment-ajouter>summary{display:flex;align-items:center;gap:8px;min-height:44px;color:var(--ink);font-size:16px}
+.comment-ajouter>summary svg{width:20px;height:20px;color:var(--i-ciel)}
+.etat-top{margin:-6px 0 14px;font-size:15px;color:var(--muted);text-align:right}
 .dern-sauv{font-size:15px;color:var(--muted)}
 .status{font-size:15px;color:var(--muted)}
-nav.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:26px}
+nav.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:26px}
 nav.tabs:empty{display:none}
 nav.tabs button{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 16px;font-size:17px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
 nav.tabs button svg{width:22px;height:22px}
+nav.tabs button{flex:1;flex-direction:column;justify-content:center;gap:4px;padding:8px 4px;min-width:0;text-align:center;line-height:1.25}
+nav.tabs button>span{display:flex;align-items:center;justify-content:center;text-align:center}
 nav.tabs button[aria-current="true"]{color:var(--ink);border-color:var(--gold);font-weight:500}
+nav.tabs button svg{color:var(--t,currentColor)}
+nav.tabs button[aria-current="true"]{background:var(--tf,transparent);border-color:var(--t,var(--gold))}
+nav.tabs button[data-tab="accueil"]{--t:var(--i-ciel);--tf:var(--p-ciel)}
+nav.tabs button[data-tab="bilan"]{--t:var(--i-lavande);--tf:var(--p-lavande)}
+nav.tabs button[data-tab="operations"]{--t:var(--i-menthe);--tf:var(--p-menthe)}
+nav.tabs button[data-tab="importer"]{--t:var(--i-peche);--tf:var(--p-peche)}
+nav.tabs button[data-tab="objectifs"]{--t:var(--i-rose);--tf:var(--p-rose)}
+nav.tabs button[data-tab="reglages"]{--t:var(--i-sable);--tf:var(--p-sable)}
 .badge{display:inline-grid;place-items:center;min-width:24px;height:24px;margin-left:8px;padding:0 7px;border-radius:12px;background:var(--gold);color:var(--bg);font-size:15px;font-weight:500;line-height:1}
 @media (max-width:700px){
   :root{--nav:76px}
@@ -61,7 +107,7 @@ nav.tabs button[aria-current="true"]{color:var(--ink);border-color:var(--gold);f
   .wrap{padding:16px 16px calc(40px + var(--nav) + env(safe-area-inset-bottom,0px))}
   nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;margin:0;gap:0;background:var(--surface);border-top:1px solid var(--line);border-bottom:0;padding-bottom:env(safe-area-inset-bottom,0px)}
   nav.tabs button{flex:1;flex-direction:column;justify-content:center;gap:3px;min-height:var(--nav);padding:6px 4px;font-size:15px;border-bottom:0;border-top:2px solid transparent;margin:0;text-align:center}
-  nav.tabs button[aria-current="true"]{border-top-color:var(--gold)}
+  nav.tabs button[aria-current="true"]{border-top-color:var(--t,var(--gold))}
   nav.tabs button>span{display:flex;align-items:center;white-space:nowrap}
   .badge{min-width:22px;height:22px;margin-left:5px}
 }
@@ -184,7 +230,19 @@ details[open]>summary::before{transform:rotate(90deg)}
 .f-amt{font-size:36px;font-weight:300;font-variant-numeric:tabular-nums;margin:0 0 6px}
 .f-x{font-size:16px;color:var(--gold);margin:6px 0}
 .f-actions{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.extrait{margin:10px 0;padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ex-l{margin:0;padding:6px 0 6px 12px;font-size:15px;color:var(--muted);border-left:3px solid transparent;overflow-wrap:anywhere}
+.ex-l.cible{color:var(--ink);font-weight:500;border-left-color:var(--gold)}
 body.fige{overflow:hidden}
+
+.filtre{margin:0 0 16px;background:var(--p-lavande);border-color:transparent}
+.filtre>summary{color:var(--ink)}
+.filtre .seg{margin:12px 0}
+.filtre .champ{margin:12px 0}
+.filtre .grand{width:100%}
+.dates{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 20px}
+.dates .champ{flex:1;min-width:150px}
+.dates input{display:block;width:100%;min-height:52px;font-size:18px;padding:8px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 
 /* Importer */
 .gros-bouton{display:flex;align-items:center;justify-content:center;gap:14px;min-height:88px;padding:18px;background:var(--ink);color:var(--bg);font-size:21px;font-weight:500;cursor:pointer;text-align:center}
@@ -238,15 +296,26 @@ textarea.anon{width:100%;min-height:160px;font:15px/1.45 ui-monospace,Menlo,mono
 .vide p{font-size:18px;color:var(--muted);max-width:32ch;margin:0 auto}
 .vide .boutons{justify-content:center;margin-top:26px}
 
-/* Année en revue */
-#review{position:fixed;inset:0;z-index:30;background:var(--ink);color:var(--bg);overflow-y:auto;scroll-snap-type:y mandatory}
-#review .slide{min-height:100vh;min-height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:40px 28px;max-width:640px;margin:0 auto}
-#review .lbl{font-size:18px;opacity:.8;margin-bottom:14px}
-#review .v{font-size:clamp(52px,15vw,100px);font-weight:300;font-variant-numeric:tabular-nums;line-height:1;color:var(--gold)}
-#review .v.txt{font-size:clamp(36px,10vw,60px);color:var(--bg)}
-#review .v.txt::first-letter{text-transform:uppercase}
-#review .c{font-size:18px;opacity:.85;margin-top:18px;max-width:36ch}
-#review .close{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:16px;color:var(--bg);font-size:17px;text-decoration:underline;text-underline-offset:4px;min-height:48px;padding:0 8px;z-index:31}
+/* Année en revue : une seule page */
+#review{position:fixed;inset:0;z-index:30;background:var(--bg);color:var(--ink);overflow-y:auto}
+#review .rv-page{max-width:640px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(40px + env(safe-area-inset-bottom,0px))}
+#review .rv-tete{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+#review h2{font-size:26px;font-weight:500;margin:0}
+#review .close{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:0 6px;font-size:17px;color:var(--ink)}
+#review .close svg{width:22px;height:22px}
+#review .rv-l{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;margin:12px 0;background:var(--p);}
+#review .rv-l>svg{width:28px;height:28px;margin-top:4px;color:var(--i)}
+#review .rv-l.menthe{--p:var(--p-menthe);--i:var(--i-menthe)}
+#review .rv-l.ciel{--p:var(--p-ciel);--i:var(--i-ciel)}
+#review .rv-l.peche{--p:var(--p-peche);--i:var(--i-peche)}
+#review .rv-l.rose{--p:var(--p-rose);--i:var(--i-rose)}
+#review .rv-l.lavande{--p:var(--p-lavande);--i:var(--i-lavande)}
+#review .rv-l.sable{--p:var(--p-sable);--i:var(--i-sable)}
+#review .rv-l p{margin:0}
+#review .rv-lbl{font-size:17px;color:var(--muted)}
+#review .rv-v{font-size:32px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.2;overflow-wrap:anywhere}
+#review .rv-v::first-letter{text-transform:uppercase}
+#review .rv-c{font-size:17px;margin-top:4px}
 
 @media (max-width:700px){
   .carte{padding:20px 16px}
@@ -506,14 +575,19 @@ a.chercher svg{width:20px;height:20px}
 <div class="wrap">
   <header class="top">
     <div class="brand">Mon compte</div>
-    <div class="top-droite"><span class="status" id="status"></span>
-      <button class="lien btn-cloud" id="cloudBtn" data-act="cloud"><i data-lucide="cloud-upload"></i>Sauvegarder dans mon dossier Cloud</button>
-      <span class="dern-sauv" id="lastbk"></span>
-      <button class="lien" data-tab="aide">Mode d’emploi</button></div>
+    <div class="actions-top" role="toolbar" aria-label="Actions rapides">
+      <button class="ico ciel" id="cloudBtn" data-act="cloud" data-tip="Sauvegarder : enregistre une copie de vos comptes dans un dossier de votre choix (Google Drive, iCloud…)."><i data-lucide="cloud-upload"></i><span class="sr">Sauvegarder dans mon dossier Cloud</span></button>
+      <label class="ico menthe" id="importBtn" data-tip="Retrouver vos comptes à partir d’un fichier de sauvegarde."><i data-lucide="folder-down"></i><span class="sr" id="importTxt">Importer la sauvegarde</span><input type="file" id="restorefile2" accept=".json,application/json" hidden></label>
+      <button class="ico alerte" id="warnBtn" data-act="cloud" data-tip="Vous n’avez encore fait aucune sauvegarde. Touchez ici pour en faire une : si vous perdez votre téléphone, vos comptes seront retrouvés."><i data-lucide="triangle-alert"></i><span class="sr">Aucune sauvegarde : sauvegarder maintenant</span></button>
+      <button class="ico sable" data-tab="aide" data-tip="Mode d’emploi : comment ajouter vos relevés, sauvegarder et vous y retrouver."><i data-lucide="circle-help"></i><span class="sr">Mode d’emploi</span></button>
+    </div>
   </header>
+  <p class="etat-top"><span class="status" id="status"></span> <span class="dern-sauv" id="lastbk"></span></p>
   <nav class="tabs" id="tabs" aria-label="Navigation principale"></nav>
   <div id="demoBar"></div>
   <main id="view"></main>
+  <div id="bulle" role="tooltip"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
 </div>
 
 <script>
@@ -665,6 +739,9 @@ const BRANDS=[
 function brandOf(label){const s=norm(label);return BRANDS.find(b=>b[0].test(s))||null}
 
 let S=blank(), demo=false, backup=null;
+/* iPhone et iPad : on laisse choisir n'importe quel fichier, sinon des fichiers de Google Drive ou d'iCloud restent grisés */
+const IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const ACCEPT_RELEVE=IOS?'':' accept=".pdf,.csv,application/pdf,text/csv"';
 let view='accueil', P=null, openCat=null, q='', FICHE=null, ONB=0;
 let UNIV='all', OPACC='';
 const reports=[];
@@ -1262,7 +1339,67 @@ function jumeau(op,acct,pris,filtre){
     if(!doute) doute=o }
   return doute?{o:doute,sur:false}:null;
 }
-async function lireFichier(f){return /\.csv$/i.test(f.name)?parseCSV(await f.text()):await parsePDF(f)}
+/* Pour chaque opération lue, retrouve la ligne du relevé d'où elle vient (méthode commune à toutes les lectures) :
+   la ligne qui contient le montant, avec le début du libellé sur cette ligne ou juste à côté. */
+function lierLignes(res){
+  const L=(res.lignes||[]).map(l=>l.text||''); if(!L.length) return;
+  const net=t=>norm(t).replace(/\s/g,''), lib=t=>norm(t).replace(/[^A-Z0-9]/g,'');
+  const c1=L.map(net), c2=L.map(lib); let ptr=0;
+  for(const o of res.ops){
+    const frag=lib(o.label).slice(0,8), a=Math.abs(o.amount).toFixed(2).replace('.',',');
+    if(frag.length<3) continue;
+    const re=new RegExp('(?<![0-9])'+a.replace(',','[,.]')+'(?![0-9])');
+    for(let k=0;k<L.length;k++){
+      const i=(ptr+k)%L.length;
+      if(re.test(c1[i])&&(c2[Math.max(0,i-1)]+c2[i]+(c2[i+1]||'')).includes(frag)){o.lg=i;ptr=i;break}
+    }
+  }
+}
+/* Les 3 lignes avant et après chaque opération, gardées avec le relevé pour pouvoir vérifier la lecture */
+function extraitsReleve(res){
+  const L=(res.lignes||[]).map(l=>l.text||''), m={};
+  for(const o of res.ops) if(o.lg!=null) for(let j=o.lg-3;j<=o.lg+3;j++) if(L[j]&&!m[j]) m[j]=L[j].slice(0,110);
+  return m;
+}
+/* Relevé déjà importé avant que le détail soit gardé : on le complète sans rien ajouter ni supprimer */
+function ajouterDetail(o,res,f,rep){
+  if(o.lg==null) return;
+  const k=cleOp(o), x=S.ops.find(y=>y.src==='pdf'&&y.lg==null&&cleOp(y)===k); if(!x) return;
+  x.lg=o.lg; S.imports=S.imports||{};
+  const im=S.imports[x.imp]||(S.imports[x.imp]={nom:f.name,quand:Date.now()});
+  im.lg=Object.assign(im.lg||{},extraitsReleve({lignes:res.lignes,ops:[o]}));
+  dirtyMonths.add(x.date.slice(0,7)); stateDirty=true; rep.detail=(rep.detail||0)+1;
+}
+const MSG_PAS_RELEVE='Ce fichier n’est pas un relevé PDF ou CSV. Si vous avez copié un lien, ouvrez-le d’abord et enregistrez le PDF sur votre appareil (sur iPhone : Partager, puis « Enregistrer dans Fichiers »), puis choisissez ce fichier.';
+async function lireFichier(f){
+  if(/\.csv$/i.test(f.name)||f.type==='text/csv') return parseCSV(await f.text());
+  const tete=new TextDecoder('latin1').decode(new Uint8Array(await f.slice(0,1024).arrayBuffer()));
+  /* Un fichier qui se dit PDF garde le message habituel ; un autre type (lien, page web, image…) est expliqué */
+  if(!tete.includes('%PDF')&&!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf') throw new Error(MSG_PAS_RELEVE);
+  return await parsePDF(f);
+}
+/* Fichier collé dans la page (iPhone : « Copier » dans le partage, puis « Coller » dans la zone prévue).
+   Le nom ou le type peuvent manquer : c'est le contenu (%PDF) qui décide, dans lireFichier. */
+let COLLE_T=0;
+const nommer=f=>/\.(pdf|csv)$/i.test(f.name||'')?f:new File([f],(f.name||'Relevé collé')+(/csv/.test(f.type)?'.csv':'.pdf'),{type:f.type||'application/pdf'});
+function fichiersCollage(dt){
+  if(!dt) return [];
+  const l=[...(dt.files||[]),...[...(dt.items||[])].filter(i=>i.kind==='file').map(i=>i.getAsFile())].filter(Boolean), vus=new Set();
+  return l.filter(f=>{const k=f.name+'|'+f.size;if(vus.has(k))return false;vus.add(k);return true}).map(nommer);
+}
+function messageCollage(txt){const r=newReport({name:'Relevé collé'},false);r.error=txt;reports.unshift(r);render();toast(txt,false)}
+function traiterCollage(e,dt){
+  const fs=fichiersCollage(dt);
+  if(fs.length){e.preventDefault();COLLE_T=Date.now();importFiles(fs,'collage');return true}
+  return false;
+}
+document.addEventListener('paste',e=>{
+  if(view!=='importer'||/^(INPUT|TEXTAREA)$/.test((e.target||{}).tagName)) return;
+  const cd=e.clipboardData;
+  if(!cd||traiterCollage(e,cd)) return;
+  const txt=cd.getData('text')||'';
+  if(/^\s*https?:\/\//i.test(txt)){e.preventDefault();messageCollage(MSG_PAS_RELEVE);return}
+});
 const cleOp=o=>o.date+'|'+o.label+'|'+o.amount;
 /* Doublons exacts : comptés un par un face aux opérations déjà enregistrées (deux cafés identiques le même jour restent deux) */
 function compteur(){const m=new Map();for(const o of S.ops){const k=cleOp(o);m.set(k,(m.get(k)||0)+1)}return {pris:k=>{const n=m.get(k)||0;if(n>0){m.set(k,n-1);return true}return false}}}
@@ -1281,12 +1418,22 @@ async function testerFichier(f){
   try{analyse(await lireFichier(f),f,true,rep)}catch(e){rep.error=e&&e.message||'Ce fichier n’a pas pu être lu. Réessayez, ou choisissez un autre relevé.'}
   reports.unshift(rep); render();
 }
-async function importFiles(files){
+/* Dit clairement ce qui vient de se passer, et montre où : un message en haut de l'écran, puis le compte rendu du relevé */
+function annoncerImport(rs,via){
+  const n=rs.reduce((s,r)=>s+(r.added||0)+(r.completees||0),0), ko=rs.filter(r=>r.error||!r.found).length;
+  const quoi={collage:'Collage réussi'}[via]||'Import réussi';
+  if(n) toast(`${quoi} ✓ : ${n} opération${n>1?'s':''} ajoutée${n>1?'s':''}.`,true);
+  else if(ko) toast('Le relevé n’a pas pu être lu : voir le message juste en dessous.',false);
+  else toast(`${quoi.replace('réussi','fait')} : ces opérations étaient déjà présentes, rien n’a été ajouté.`,true);
+  setTimeout(()=>{const el=document.querySelector('.releves');if(el)el.scrollIntoView({block:'start',behavior:'smooth'})},60);
+}
+async function importFiles(files,via){
   if(demo) exitDemo();
+  const traites=[];
   for(const f of files){
     const rep=newReport(f,false);
     try{
-      const res=await lireFichier(f);
+      const res=await lireFichier(f); lierLignes(res);
       const a=analyse(res,f,false,rep);
       if(a){
         const last=res.ops.reduce((m,o)=>o.date>m?o.date:m,'');
@@ -1297,13 +1444,14 @@ async function importFiles(files){
       const atype=(acctById(rep.acct)||{}).type||'perso';
       S.douteux=S.douteux||[];
       for(const o of res.ops){
-        if(deja.pris(cleOp(o))){rep.dups++;continue}
+        if(deja.pris(cleOp(o))){rep.dups++;ajouterDetail(o,res,f,rep);continue}
         /* Déjà là grâce au copier-coller : la version du relevé remplace, la rubrique et le reste sont gardés */
         const j=jumeau(o,rep.acct,pris,x=>x.src==='paste');
-        if(j&&j.sur){const x=j.o,c0=catOf(x);pris.add(x.id);dirtyMonths.add(x.date.slice(0,7));x.date=o.date;x.label=o.label;x.merchant=merchantOf(o.label);x.src=src;x.imp=rep.imp;dirtyMonths.add(o.date.slice(0,7));
+        if(j&&j.sur){const x=j.o,c0=catOf(x);pris.add(x.id);dirtyMonths.add(x.date.slice(0,7));x.date=o.date;x.label=o.label;x.merchant=merchantOf(o.label);x.src=src;x.imp=rep.imp;if(o.lg!=null)x.lg=o.lg;dirtyMonths.add(o.date.slice(0,7));
           if(c0&&c0!=='interne'&&!x.cat&&!S.rules[x.merchant]&&!S.rules[x.merchant+(x.amount>0?'|+':'|-')]){S.rules[x.merchant+(x.amount>0?'|+':'|-')]=c0;delete S.sugg[x.merchant]}
           rep.completees++;continue}
         const op={id:Math.random().toString(36).slice(2,10),date:o.date,label:o.label,amount:o.amount,merchant:merchantOf(o.label),acct:rep.acct,imp:rep.imp,src};
+        if(o.lg!=null) op.lg=o.lg;
         if(j){pris.add(j.o.id);S.douteux.push({a:j.o.id,b:op.id});rep.douteux++}
         S.ops.push(op); rep.added++; rep.sample.push(op); dirtyMonths.add(o.date.slice(0,7));
         if(appliqueAuto(op,atype)) stateDirty=true;
@@ -1311,12 +1459,12 @@ async function importFiles(files){
       }
       classerNouvelles(nouvelles);
     }catch(e){rep.error=e&&e.message||'Ce fichier n’a pas pu être lu. Réessayez, ou choisissez un autre relevé.'}
-    if(rep.added||rep.completees){S.imports=S.imports||{};S.imports[rep.imp]={nom:f.name,quand:Date.now()};stateDirty=true}
-    reports.unshift(rep);
+    if(rep.added||rep.completees){S.imports=S.imports||{};S.imports[rep.imp]={nom:f.name,quand:Date.now()};if(rep.lus&&rep.lus.some(o=>o.lg!=null)){const ex=extraitsReleve({lignes:rep.lignes,ops:rep.lus});if(Object.keys(ex).length)S.imports[rep.imp].lg=ex}stateDirty=true}
+    reports.unshift(rep); traites.push(rep);
   }
   if(!S.since&&S.ops.length) S.since=Date.now();
   S.ops.sort((a,b)=>a.date<b.date?1:-1);
-  P=null; save(); render();
+  P=null; save(); render(); annoncerImport(traites,via);
 }
 /* ============ Classement automatique après un import ============
    Objectif : quelques questions au plus (5), tout le reste classé sans rien demander.
@@ -1820,11 +1968,11 @@ function render(){
   const onb=!S.onboarded&&!demo;
   document.body.classList.toggle('onb',onb);
   const nv=onb?0:nbAVerifier();
-  $('#tabs').innerHTML=onb?'':TABS.map(([k,l,ic])=>`<button data-tab="${k}" aria-current="${view===k}"><i data-lucide="${ic}"></i><span>${l}${k==='operations'&&nv?`<span class="badge" aria-label="${nv} à vérifier">${nv}</span>`:''}</span></button>`).join('');
+  $('#tabs').innerHTML=onb?'':TABS.map(([k,l,ic])=>`<button data-tab="${k}" aria-current="${view===k}"${k==='operations'&&nv?` data-tip="${nv} opération${nv>1?'s':''} à vérifier. Touchez Mes opérations pour les ranger, une par une."`:''}><i data-lucide="${ic}"></i><span>${l}${k==='operations'&&nv?`<span class="badge" aria-label="${nv} à vérifier">${nv}</span>`:''}</span></button>`).join('');
   $('#demoBar').innerHTML=demo?`<div class="demo-bar"><span>Vous regardez un exemple.</span><button data-act="exitdemo">Quitter l’exemple</button></div>`:'';
   const v=$('#view');
   if(onb&&view!=='aide') v.innerHTML=vDemarrage();
-  else if(!S.ops.length&&['accueil','bilan','operations'].includes(view)) v.innerHTML=libBanner()+vide();
+  else if(!S.ops.length&&['accueil','bilan','operations'].includes(view)) v.innerHTML=libBanner()+vide(view);
   else v.innerHTML=libBanner()+{accueil:vAccueil,bilan:vBilan,operations:vOps,importer:vImport,objectifs:vObjectifs,reglages:vReglages,aide:vAide}[view]();
   if(view!=='bilan') BCAT=null;
   v.insertAdjacentHTML('beforeend',(FICHE?fiche(FICHE):BCAT?ficheRub(BCAT):'')+(NEWCAT?fenetreRubrique():'')+(MODAL?fenetreModal():''));
@@ -1836,10 +1984,15 @@ function privacyText(){return mode==='db'
   ?'Vos comptes sont privés : personne d’autre ne peut les voir, pas même la personne qui vous a transmis l’application.'
   :'Vos comptes restent sur cet appareil : rien n’est envoyé ailleurs, et personne d’autre ne peut les voir. Ils ne se retrouvent pas tout seuls sur un autre appareil (téléphone, ordinateur) : voir Réglages, « Vos données », pour les emporter avec vous.'}
 function privacyBox(){return `<div class="note-box" role="note"><i data-lucide="lock"></i><p>${privacyText()}</p></div>`}
-function vide(){
-  return `<div class="vide"><h2>Ajoutez vos relevés pour commencer</h2><p>Téléchargez vos relevés de compte en PDF sur le site de votre banque, puis ajoutez-les ici.</p>
+/* Écran sans aucune opération : chaque onglet dit ce qu'il montrera, avec les mêmes façons de démarrer */
+function vide(v){
+  const t={accueil:['Ajoutez vos relevés pour commencer','Téléchargez vos relevés de compte en PDF sur le site de votre banque, puis ajoutez-les ici.'],
+    bilan:['Votre bilan apparaîtra ici','Il se calcule à partir de vos relevés : ce qui est entré, ce qui est parti, et où part votre argent.'],
+    operations:['Vos opérations apparaîtront ici','Chaque ligne de vos relevés sera listée ici, et vous pourrez la ranger dans une rubrique.']}[v]||[];
+  return `<div class="vide"><h2>${t[0]}</h2><p>${t[1]}</p>
   <div class="boutons"><button class="btn" data-tab="importer">Ajouter mes relevés</button><button class="btn secondaire" data-act="demo">Voir un exemple</button></div>
-  <p class="lien-aide"><button class="lien" data-tab="aide"><i data-lucide="circle-help"></i>Comment ça marche ? Voir le mode d’emploi</button></p></div>`;
+  <p class="aide">Vous avez déjà utilisé l’application sur un autre appareil ? Vos comptes ne passent pas d’un appareil à l’autre tout seuls : sauvegardez-les sur l’autre appareil, puis retrouvez-les ici.</p>
+  <div class="boutons"><button class="btn secondaire" data-act="choisirsauv"><i data-lucide="folder-down"></i>Retrouver mes comptes (fichier de sauvegarde)</button></div></div>`;
 }
 function moisBar(){
   return `<div class="mois"><button class="fleche" data-shift="-1" aria-label="Mois précédent"><i data-lucide="chevron-left"></i></button>
@@ -1929,7 +2082,17 @@ function aVerifier(){
   }
   return h;
 }
-let HEURES=null;
+let HEURES=null, RELEVE=false;
+/* Ce qui est écrit sur le relevé autour de l'opération (3 lignes avant, 3 après), à la demande */
+function blocReleve(o){
+  if(o.src!=='pdf'&&o.src!=='csv') return '';
+  const im=(S.imports||{})[o.imp], lg=im&&im.lg;
+  if(!lg) return o.src==='pdf'?`<p class="aide">Ce détail n’est pas gardé pour ce relevé. Pour le voir, ajoutez de nouveau ce relevé dans Importer : rien ne sera en double.</p>`:'';
+  if(o.lg==null) return `<p class="aide">Cette ligne n’a pas pu être retrouvée sur le relevé.</p>`;
+  if(!RELEVE) return `<button class="lien" data-act="releve"><i data-lucide="file-search"></i>Voir ce qui est écrit sur le relevé</button>`;
+  const l=[];for(let j=o.lg-3;j<=o.lg+3;j++) if(lg[j]!=null) l.push(`<p class="ex-l${j===o.lg?' cible':''}">${esc(lg[j])}</p>`);
+  return `<div class="extrait"><p class="aide">Relevé « ${esc(im.nom)} ». La ligne en gras est celle d’où vient cette opération.</p>${l.join('')}<button class="lien" data-act="releve">Masquer</button></div>`;
+}
 /* Sous un encaissement de l'activité : son équivalent en heures au prix minimum, et le temps réellement passé */
 function heuresBloc(o,statique){
   const px=heuresPrix(); if(!px||!estEncaissementPro(o)) return '';
@@ -1959,16 +2122,59 @@ function totalRecherche(list){
     ${rec>0.005?`<div class="ligne"><span>Reçu ou remboursé</span><b>+${eur(rec)}</b></div>
     <div class="ligne total"><span>Au final</span><b>${net<0?'−':'+'}${eur(Math.abs(net))}</b></div>`:''}</div>`;
 }
+/* Filtre de Mes opérations : période (mois, trimestre, année, dates précises) et rubrique */
+let FIL={lvl:'M',cat:'',du:'',au:''};
+const filActif=()=>FIL.cat!==''||FIL.lvl!=='M';
+function filBornes(){
+  if(FIL.lvl==='D'){
+    const ds=S.ops.map(o=>o.date).sort(), min=ds[0]||'', max=ds[ds.length-1]||'';
+    let du=FIL.du||min, au=FIL.au||max;
+    if(du>au) [du,au]=[au,du];
+    return [du,au];
+  }
+  const [a,b]=bounds({...P,lvl:FIL.lvl}); return [a+'-01',b+'-31'];
+}
+function opsFiltrees(){
+  let l;
+  if(FIL.lvl==='M') l=(BYMONTH[P.y+'-'+pad(P.m)]||[]).slice();
+  else{
+    const [du,au]=filBornes();
+    l=du?monthKeys(du.slice(0,7),au.slice(0,7)).flatMap(k=>BYMONTH[k]||[]).filter(o=>o.date>=du&&o.date<=au):[];
+  }
+  return filtreRubrique(l);
+}
+function filtreRubrique(l){
+  if(!FIL.cat) return l;
+  if(FIL.cat==='_aver') return l.filter(o=>!catOf(o)&&!(INTERNAL[o.id]&&!o.cat));
+  return l.filter(o=>catOf(o)===FIL.cat);
+}
+function periodeTexte(){
+  if(FIL.lvl==='D'){const [du,au]=filBornes();return du?`Du ${dfmt(du).replace(/(\d\d)$/,'20$1')} au ${dfmt(au).replace(/(\d\d)$/,'20$1')}`:''}
+  const t=plabel({...P,lvl:FIL.lvl});return t[0].toUpperCase()+t.slice(1);
+}
+function filtreBar(t){
+  const lv=[['M','Mois'],['Q','Trimestre'],['Y','Année'],['D','Dates']];
+  const nav=t?'':FIL.lvl==='M'?moisBar()
+    :FIL.lvl==='D'?`<div class="dates"><label class="champ">Du<input id="filtreDu" type="date" value="${esc(FIL.du)}"></label><label class="champ">Au<input id="filtreAu" type="date" value="${esc(FIL.au)}"></label></div>`
+    :`<div class="mois"><button class="fleche" data-oshift="-1" aria-label="Période précédente"><i data-lucide="chevron-left"></i></button><h2>${esc(periodeTexte())}</h2><button class="fleche" data-oshift="1" aria-label="Période suivante"><i data-lucide="chevron-right"></i></button></div>`;
+  return `<details class="carte repli filtre"${filActif()?' open':''}><summary>Filtrer par période et par rubrique${filActif()?' <span class="compte">(actif)</span>':''}</summary>
+    ${t?'<p class="aide">La recherche porte sur toutes les périodes ; seule la rubrique choisie s’applique.</p>':`<div class="seg" role="group" aria-label="Période">${lv.map(([k,l])=>`<button data-flvl="${k}" aria-pressed="${FIL.lvl===k}">${l}</button>`).join('')}</div>`}
+    <label class="champ">Rubrique<select class="grand" id="filtreCat"><option value="">Toutes les rubriques</option><option value="_aver"${FIL.cat==='_aver'?' selected':''}>À vérifier (sans rubrique)</option>${catOptions(FIL.cat,false,'',false)}</select></label>
+    ${filActif()?'<button class="lien" data-act="filreset">Tout afficher</button>':''}</details>${nav}`;
+}
 function vOps(){
-  const t=norm(q.trim()), k=P.y+'-'+pad(P.m);
+  const t=norm(q.trim());
   /* Recherche : marchand, libellé, rubrique, ou somme (« 45,80 », « 45.8 », « 45 ») */
   const som=/^[+\-−]?\d+([.,]\d{1,2})?\s*(€|eur|euros?)?$/i.test(q.trim())?q.trim().replace(/^[+\-−]/,'').replace(/\s*(€|eur|euros?)$/i,'').replace('.',','):'';
   const okSom=o=>{if(!som) return false; const a=Math.abs(o.amount).toFixed(2).replace('.',','); return som.includes(',')?a.startsWith(som):a.split(',')[0]===som};
-  const list=t?S.ops.filter(o=>norm(o.label+' '+o.merchant+' '+((catById(catOf(o))||{}).name||'')).includes(t)||okSom(o)):(BYMONTH[k]||[]).slice().sort((a,b)=>a.date<b.date?1:-1);
+  const list=(t?filtreRubrique(S.ops.filter(o=>norm(o.label+' '+o.merchant+' '+((catById(catOf(o))||{}).name||'')).includes(t)||okSom(o))):opsFiltrees()).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0);
+  const resume=t?`${list.length} opération${list.length>1?'s':''} trouvée${list.length>1?'s':''}, tous mois confondus.`
+    :filActif()?`${list.length} opération${list.length>1?'s':''}${FIL.cat?' dans '+(FIL.cat==='_aver'?'« À vérifier »':'« '+esc(catById(FIL.cat)?.name||'')+' »'):''}${FIL.lvl!=='M'?', '+esc(periodeTexte()):''}.`:'';
   return aVerifier()+`<input class="recherche" id="search" type="search" placeholder="Rechercher un marchand ou une somme" value="${esc(q)}" aria-label="Rechercher un marchand ou une somme">
-  ${t?`<p class="aide">${list.length} opération${list.length>1?'s':''} trouvée${list.length>1?'s':''}, tous mois confondus.</p>${totalRecherche(list)}`:moisBar()}
+  ${filtreBar(t)}
+  ${resume?`<p class="aide">${resume}</p>`:''}${t||filActif()?totalRecherche(list):''}
   <div class="ops">${list.slice(0,300).map(opLine).join('')||'<p class="aide">Aucune opération.</p>'}</div>
-  ${list.length>300?'<p class="aide">Seules les 300 plus récentes sont affichées.</p>':''}`;
+  ${list.length>300?'<p class="aide">Seules les 300 plus récentes sont affichées. Réduisez la période pour voir le reste.</p>':''}`;
 }
 /* Fiche d'une opération : rubrique, retour d'achat, suppression */
 function fiche(id){
@@ -1980,6 +2186,7 @@ function fiche(id){
     <p class="aide">${esc(o.label)}<br>${dfmt(o.date).replace(/(\d\d)\/(\d\d)\/(\d\d)/,'$1/$2/20$3')}${o.src!=='rev'&&ACCN>1?`, ${esc(acctName(o.acct))}`:''}</p>
     ${o.src==='rev'?'':lienRecherche(o.label)}
     ${opExtra(o)?`<p class="f-x">${esc(opExtra(o))}</p>`:''}
+    ${blocReleve(o)}
     ${o.src==='rev'||x?'':`<label class="f-lbl" for="ficheCat">Rubrique</label>
     <select class="grand" id="ficheCat">${c||FICHESEL?'':'<option value="">À vérifier</option>'}${catOptions(FICHESEL||c,false,'',true)}</select>
     <div class="radios"><label><input type="radio" name="portee" value="tout" checked> Pour toutes les opérations de ce marchand</label>
@@ -1999,7 +2206,7 @@ function reportLine(r){
   else if(r.test) txt=`${qui}, ${mois} : ${r.found} opération${r.found>1?'s':''} lue${r.found>1?'s':''}. C’est un essai, rien n’a été enregistré.`;
   else if(r.colle) {txt=`Copier-coller${r.bank?', '+esc(r.bank):''} : ${r.added} opération${r.added>1?'s':''} ajoutée${r.added>1?'s':''} ✓${r.dups?`, ${r.dups} déjà présente${r.dups>1?'s':''}`:''}${r.douteux?`, ${r.douteux} à confirmer dans Mes opérations`:''}.`;cls='ok'}
   else if(r.completees) {txt=`${qui}, ${mois} : ${r.found} opérations. ${r.completees} étaient déjà là grâce à votre copier-coller et ont été complétées, ${r.added} ajoutée${r.added>1?'s':''} ✓${r.douteux?` (${r.douteux} à confirmer dans Mes opérations)`:''}`;cls='ok'}
-  else if(!r.added) txt=`${qui}, ${mois} : déjà importé, rien n’a été ajouté.`;
+  else if(!r.added) txt=r.detail?`${qui}, ${mois} : déjà importé, rien n’a été ajouté. Le détail du relevé est maintenant disponible pour ${r.detail} opération${r.detail>1?'s':''} ✓`:`${qui}, ${mois} : déjà importé, rien n’a été ajouté.`;
   else {txt=`${qui}, ${mois} : ${r.added} opération${r.added>1?'s':''} ajoutée${r.added>1?'s':''} ✓`;cls='ok'}
   if(r.found&&!r.error&&r.controle&&r.controle.ok) txt+=' Relevé vérifié ✓';
   const a=!r.test&&acctById(r.acct);
@@ -2082,12 +2289,20 @@ function choixTypeImport(){
 }
 function vImport(){
   const nRev=S.ops.filter(o=>o.src==='rev').length;
-  return privacyBox()+`<div class="note-box" role="note"><i data-lucide="info"></i><p>Le premier mois est un peu long : l’application vous pose quelques questions. Ensuite, environ 90 % du travail n’est plus à faire : elle retient vos réponses et reconnaît les enseignes toute seule. <button class="lien" data-tab="aide">Voir le mode d’emploi</button></p></div>
+  return `<details class="mode-court"><summary><i data-lucide="circle-help"></i>Mode d’emploi</summary>
+    ${privacyBox()}<div class="note-box" role="note"><i data-lucide="info"></i><p>Le premier mois est un peu long : l’application vous pose quelques questions. Ensuite, environ 90 % du travail n’est plus à faire : elle retient vos réponses et reconnaît les enseignes toute seule. <button class="lien" data-tab="aide">Voir le mode d’emploi complet</button></p></div></details>
   <section class="carte">
   ${choixTypeImport()}
-  <label class="gros-bouton" data-drop="bank"><input type="file" id="file" accept=".pdf,.csv,application/pdf,text/csv" multiple><i data-lucide="file-plus-2"></i><span>Ajouter mes relevés</span></label>
-  <p class="aide">Des relevés PDF, plusieurs à la fois, même de banques différentes. Ce qui est déjà importé est ignoré.</p>
-  <label class="btn secondaire">Tester un relevé<input type="file" id="testfile" accept=".pdf,.csv,application/pdf,text/csv" hidden></label>
+  <label class="gros-bouton" data-drop="bank"><input type="file" id="file"${ACCEPT_RELEVE} multiple><i data-lucide="file-plus-2"></i><span>Ajouter mes relevés</span></label>
+  <details class="autre comment-ajouter"><summary><i data-lucide="circle-help"></i>Comment ajouter mes relevés ?</summary>
+    <p class="aide">Des relevés PDF, plusieurs à la fois, même de banques différentes. Ce qui est déjà importé est ignoré.</p>
+    <p class="aide"><b>Sur ordinateur :</b> téléchargez vos relevés sur le site de votre banque, puis choisissez-les ici (ou glissez-les sur le gros bouton).</p>
+    <p class="aide"><b>Sur iPhone ou iPad :</b> l’iPhone ne permet pas de coller un fichier copié dans une page web. Le plus sûr :</p>
+    <ol class="aide liste-etapes"><li>Créez une fois un dossier « Relevés » dans l’application Fichiers.</li>
+      <li>Pour chaque relevé : bouton Partager, « Enregistrer dans Fichiers », puis ce dossier (l’iPhone retient le dernier dossier choisi).</li>
+      <li>Ici, touchez « Ajouter mes relevés », « Sélectionner des fichiers », ouvrez le dossier, touchez « Sélectionner » en haut à droite puis chaque relevé : ils sont tous lus d’un seul coup.</li></ol>
+    <p class="aide">Un lien copié ne peut pas être ouvert par l’application, car vos données ne quittent jamais votre appareil : il faut le fichier PDF lui-même.</p></details>
+  <label class="btn secondaire">Tester un relevé<input type="file" id="testfile"${ACCEPT_RELEVE} hidden></label>
   <p class="aide">Pour voir comment un relevé est lu, sans rien enregistrer.</p>
   <button class="btn secondaire" data-act="coller"><i data-lucide="clipboard-paste"></i>Coller mes opérations</button>
   <p class="aide">Copiez les opérations sur le site de votre banque et collez-les ici. Celles qui sont déjà là ne sont pas ajoutées deux fois, même si vous importez le relevé PDF ensuite.</p></section>
@@ -2310,15 +2525,15 @@ function exporterLecteur(i){
   const r=(S.readers||[])[i]; if(!r) return;
   const data=JSON.stringify({app:'mes-comptes-lecteur',version:1,lecteur:r},null,1), name=`lecteur-${norm(r.nom).toLowerCase().replace(/[^a-z0-9]+/g,'-')}.json`;
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();a.remove();
-  readerErr=false; readerMsg=`Lecteur « ${r.nom} » exporté : envoyez le fichier ${name} à la personne qui a la même banque.`; render();
+  readerErr=false; readerMsg=`Méthode de lecture « ${r.nom} » enregistrée dans le fichier ${name} : envoyez-le à une personne qui a la même banque.`; render();
 }
 async function importerLecteur(file){
   readerErr=true;
   try{const j=JSON.parse(await file.text()), r=j&&j.lecteur||j;
-    if(!r||!r.nom) throw new Error('Ce fichier n’est pas un lecteur de relevés.');
+    if(!r||!r.nom) throw new Error('Ce fichier n’est pas une méthode de lecture reçue d’une autre personne.');
     if(r.type==='colonnes'){if(!r.cols||r.cols.date==null) throw new Error('Ce lecteur est incomplet.')} else compileReader(r);
     S.readers=(S.readers||[]).filter(x=>x.nom!==r.nom); S.readers.unshift(r); stateDirty=true; save();
-    readerErr=false; readerMsg=`Lecteur « ${r.nom} » ajouté : les relevés de cette banque seront lus automatiquement.`;
+    readerErr=false; readerMsg=`Méthode de lecture « ${r.nom} » ajoutée : les relevés de cette banque seront lus automatiquement.`;
   }catch(e){readerMsg=e&&e.message&&!/JSON/.test(e.message)?e.message:'Ce fichier n’est pas un lecteur de relevés.'}
   render();
 }
@@ -2587,18 +2802,33 @@ function openReview(y){
   const ops=S.ops.filter(o=>o.date.startsWith(y+'-')&&o.amount<0&&o.src!=='rev'&&!INTERNAL[o.id]&&opUniv(o)==='perso');
   const cnt={}; ops.forEach(o=>cnt[o.merchant]=(cnt[o.merchant]||0)+1); const fav=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
   const defis=S.challenges.filter(c=>c.id==='auto'&&c.month.startsWith(y+'-')).map(evalDefi).filter(x=>x&&x.status==='réussi');
-  const sl=(lbl,v,c,txt)=>`<section class="slide"><div class="lbl">${lbl}</div><div class="v${txt?' txt':''}">${v}</div>${c?`<div class="c">${c}</div>`:''}</section>`;
-  const html=`<div id="review" role="dialog" aria-label="Votre année en revue"><button class="close" data-act="closereview">Fermer</button>
-    ${sl(`Votre année ${y}`,'En revue','Faites défiler vers le bas.',true)}
-    ${pro.length?sl('Vous avez encaissé',esc(eur0(ca)),`Sur ${pro.length} mois, soit ${esc(eur0(ca/pro.length))} par mois en moyenne.`):''}
-    ${pro.length?sl('Ce que vous avez gagné',esc(signed(net)),`Une heure de travail vous a rapporté ${esc(eurH(net/pro.length/heures()))} en moyenne, pour ${esc(eurH(tauxCible()))} visés.`):''}
-    ${best&&pro.length>1?sl('Votre meilleur mois',esc(MOIS[best.m-1]),`${esc(eur0(best.pro.revenuNet))} gagnés. Le plus difficile : ${esc(MOIS[worst.m-1])}, avec ${esc(signed(worst.pro.revenuNet))}.`,true):''}
-    ${pe.length?sl('Vos dépenses perso',esc(eur0(dep)),top?`La première rubrique : ${esc(catById(top[0])?.name||'')}, ${esc(eur0(top[1]))}.`:''):''}
-    ${fav?sl('Votre adresse préférée',esc(fav[0]),`${fav[1]} passages dans l’année.`,true):''}
-    ${sl('Défis réussis',String(defis.length),defis.length?`Bravo : ${esc(eur0(defis.reduce((s,x)=>s+x.economie,0)))} économisés grâce à eux.`:'Relevez le défi du mois : il est sur votre page d’accueil.')}
-    ${sl('À l’année prochaine','Merci','Continuez d’ajouter vos relevés chaque mois.',true)}
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend',html); document.body.style.overflow='hidden';
+  /* Tout sur une seule page : une ligne par chiffre important */
+  const li=(couleur,icone,lbl,v,c)=>`<div class="rv-l ${couleur}"><i data-lucide="${icone}"></i><div><p class="rv-lbl">${lbl}</p><p class="rv-v">${v}</p>${c?`<p class="rv-c">${c}</p>`:''}</div></div>`;
+  /* Salarié : ce qui est entré (salaire et autres rentrées), ce qui est parti, la balance */
+  const sm=SAL?mois.map(x=>{const pm={lvl:'M',y,m:x.m},R=aggRaw(pm);return R.any?{m:x.m,rec:R.perso.income,dep:x.pe.net}:null}).filter(Boolean):[];
+  const recT=sm.reduce((s,x)=>s+x.rec,0), depT=sm.reduce((s,x)=>s+x.dep,0), balT=recT-depT;
+  const smt=sm.slice().sort((a,b)=>(b.rec-b.dep)-(a.rec-a.dep)), bestS=smt[0], worstS=smt[smt.length-1];
+  const lignesSalarie=sm.length?
+    li('menthe','banknote','Ce que vous avez reçu',esc(eur0(recT)),`Sur ${sm.length} mois, soit ${esc(eur0(recT/sm.length))} par mois en moyenne.`)+
+    li('rose','shopping-cart','Ce que vous avez dépensé',esc(eur0(depT)),top?`La première rubrique : ${esc(catById(top[0])?.name||'')}, ${esc(eur0(top[1]))}.`:'')+
+    li('ciel','piggy-bank','Balance de l’année',esc(signed(balT)),balT>=0?`Vous avez dépensé moins que ce qui est entré : ${esc(eur0(balT))} de côté.`:`Vous avez dépensé ${esc(eur0(-balT))} de plus que ce qui est entré.`)+
+    (sm.length>1?li('peche','trophy','Votre meilleur mois',esc(MOIS[bestS.m-1]),`${esc(signed(bestS.rec-bestS.dep))} de balance. Le plus difficile : ${esc(MOIS[worstS.m-1])}, avec ${esc(signed(worstS.rec-worstS.dep))}.`):''):'';
+  const lignesIndep=`
+    ${pro.length?li('menthe','banknote','Vous avez encaissé',esc(eur0(ca)),`Sur ${pro.length} mois, soit ${esc(eur0(ca/pro.length))} par mois en moyenne.`):''}
+    ${pro.length?li('ciel','piggy-bank','Ce que vous avez gagné',esc(signed(net)),`Une heure de travail vous a rapporté ${esc(eurH(net/pro.length/heures()))} en moyenne, pour ${esc(eurH(tauxCible()))} visés.`):''}
+    ${best&&pro.length>1?li('peche','trophy','Votre meilleur mois',esc(MOIS[best.m-1]),`${esc(eur0(best.pro.revenuNet))} gagnés. Le plus difficile : ${esc(MOIS[worst.m-1])}, avec ${esc(signed(worst.pro.revenuNet))}.`):''}
+    ${pe.length?li('rose','shopping-cart','Vos dépenses perso',esc(eur0(dep)),top?`La première rubrique : ${esc(catById(top[0])?.name||'')}, ${esc(eur0(top[1]))}.`:''):''}
+  `;
+  const lignesChiffres=SAL?lignesSalarie:lignesIndep;
+  const html=`<div id="review" role="dialog" aria-label="Votre année en revue"><div class="rv-page">
+    <div class="rv-tete"><h2>Votre année ${y}</h2><button class="close" data-act="closereview"><i data-lucide="x"></i>Fermer</button></div>
+    <p class="aide">Les chiffres importants de l’année, sur une seule page.</p>
+    ${lignesChiffres}
+    ${fav?li('lavande','heart','Votre adresse préférée',esc(fav[0]),`${fav[1]} passages dans l’année.`):''}
+    ${li('sable','target','Défis réussis',String(defis.length),defis.length?`Bravo : ${esc(eur0(defis.reduce((s,x)=>s+x.economie,0)))} économisés grâce à eux.`:'Relevez le défi du mois : il est sur votre page d’accueil.')}
+    <p class="aide centre">Continuez d’ajouter vos relevés chaque mois.</p>
+  </div></div>`;
+  document.body.insertAdjacentHTML('beforeend',html); document.body.style.overflow='hidden'; icons();
 }
 /* ============ Sauvegarde ============ */
 let backupMsg='';
@@ -2606,6 +2836,9 @@ let backupMsg='';
 function majSauvegardeEntete(){
   const b=$('#cloudBtn'), l=$('#lastbk'); if(!b||!l) return;
   b.hidden=!!demo; l.hidden=!!demo;
+  const aS=typeof S!=='undefined'&&S&&S.lastBackup, ib=$('#importBtn'), wb=$('#warnBtn');
+  const videA=!(S&&S.ops&&S.ops.length);
+  if(ib&&wb){ib.hidden=!!demo||(!aS&&!videA); wb.hidden=!!demo||!!aS||videA; if(!aS){$('#importTxt').textContent='Importer une sauvegarde';ib.dataset.tip='Vous avez déjà des comptes sur un autre appareil ? Choisissez ici le fichier de sauvegarde pour les retrouver.'} if(aS){const d=new Date(S.lastBackup).toLocaleDateString('fr-FR');$('#importTxt').textContent='Importer la sauvegarde du '+d;ib.dataset.tip='Retrouver vos comptes : choisissez le fichier de la sauvegarde du '+d+'.'}}
   const t=typeof S!=='undefined'&&S&&S.lastBackup;
   l.textContent=t?'Dernière sauvegarde : '+new Date(t).toLocaleDateString('fr-FR'):'Jamais sauvegardé';
 }
@@ -2633,16 +2866,22 @@ async function backup_(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();a.remove();
   S.lastBackup=Date.now();save();backupMsg='Sauvegarde téléchargée. Gardez ce fichier en lieu sûr.';majSauvegardeEntete();render();
 }
+/* Restaurer : la confirmation est dans la page (certains écrans, dont l’aperçu en ligne, masquent les fenêtres du navigateur) */
+let RESTAURER=null, WIPE=false;
 async function restore_(file){
   try{
     const j=JSON.parse(await file.text());
     if(j.app!==(SAL?'mon-compte':'mes-comptes')||!j.data) throw 0;
-    if(!confirm('Remplacer toutes vos données actuelles par cette sauvegarde ?')) return;
-    if(demo) exitDemo();
-    S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));
-    S=merge(j.data); S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));
-    backupMsg=`Sauvegarde du ${new Date(j.date).toLocaleDateString('fr-FR')} restaurée.`; P=null; save(); render();
+    if(S.ops.length&&!demo){RESTAURER=j;backupMsg='';render();return}
+    appliquerRestauration(j);
   }catch(e){backupMsg='Ce fichier n’est pas une sauvegarde de '+(SAL?'Mon compte':'Mes comptes')+'.';render()}
+}
+function appliquerRestauration(j){
+  RESTAURER=null;
+  if(demo) exitDemo();
+  S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));
+  S=merge(j.data); S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));
+  backupMsg=`Sauvegarde du ${new Date(j.date).toLocaleDateString('fr-FR')} restaurée.`; P=null; save(); render();
 }
 
 let readerMsg='', readerErr=false;
@@ -2661,8 +2900,8 @@ function addReader(){
     const n=test?readWith(c,test.raw.split('\n'),new Date().getFullYear()).length:null;
     S.readers=(S.readers||[]).filter(x=>x.nom!==r.nom); S.readers.unshift({nom:r.nom,detection:r.detection||'',ligne:r.ligne,signe:r.signe||'moins'});
     stateDirty=true; save();
-    readerErr=false; readerMsg=`Lecteur « ${r.nom} » ajouté.`+(n!=null?` Il reconnaît ${n} opération${n>1?'s':''} dans « ${test.name} ». Réimportez ce relevé pour les ajouter.`:' Réimportez votre relevé.');
-  }catch(e){readerMsg='Ce texte n’est pas un lecteur valide. '+(e&&e.message&&!/JSON/.test(e.message)?e.message:'Copiez bien toute la réponse de Claude, de { à }.')}
+    readerErr=false; readerMsg=`Méthode de lecture « ${r.nom} » ajoutée.`+(n!=null?` Il reconnaît ${n} opération${n>1?'s':''} dans « ${test.name} ». Réimportez ce relevé pour les ajouter.`:' Réimportez votre relevé.');
+  }catch(e){readerMsg='Ce texte n’est pas une méthode de lecture valide. '+(e&&e.message&&!/JSON/.test(e.message)?e.message:'Copiez bien toute la réponse de Claude, de { à }.')}
   render(); const el=$('#lecteurs'); if(el) el.scrollIntoView({block:'start'});
 }
 
@@ -2685,7 +2924,8 @@ document.addEventListener('click',async e=>{
   if(d.nru){NEWCAT.nom=$('#nrNom').value;NEWCAT.univers=d.nru;render();return}
   if(d.nri){NEWCAT.nom=$('#nrNom').value;NEWCAT.icon=d.nri;render();return}
   if(d.act==='nouvrub'){ouvrirRubrique({de:d.de||'accueil'});return}
-  if(d.act==='closefiche'){FICHE=null;BCAT=null;FICHESEL=null;render();return}
+  if(d.act==='releve'){RELEVE=!RELEVE;render();return}
+  if(d.act==='closefiche'){RELEVE=false;FICHE=null;BCAT=null;FICHESEL=null;render();return}
   if(d.blvl){PB.lvl=d.blvl;BTOUT=false;render();return}
   if(d.bshift){PB=shift(PB,+d.bshift);BTOUT=false;render();return}
   if(d.bu){BU=d.bu;BCAT=null;render();return}
@@ -2709,7 +2949,12 @@ document.addEventListener('click',async e=>{
   if(d.alvl){AL=d.alvl;openCat=null;render();return}
   if(d.ashift){P=shift({...P,lvl:AL},+d.ashift);P.lvl='M';openCat=null;render();return}
   if(d.shift){P=shift(P,+d.shift);openCat=null;render();return}
-  if(d.op){FICHE=d.op;FICHESEL=null;render();setTimeout(()=>$('.fiche .fermer')?.focus(),30);return}
+  if(d.act==='restok'){if(RESTAURER)appliquerRestauration(RESTAURER);return}
+  if(d.act==='restno'){RESTAURER=null;render();return}
+  if(d.oshift){const n=shift({...P,lvl:FIL.lvl},+d.oshift);P={lvl:'M',y:n.y,m:n.m};render();return}
+  if(d.flvl){FIL.lvl=d.flvl;if(d.flvl==='D'&&!FIL.du&&!FIL.au){const [a,b]=bounds({...P,lvl:'M'});FIL.du=a+'-01';FIL.au=b+'-'+pad(new Date(P.y,P.m,0).getDate())}render();return}
+  if(d.act==='filreset'){FIL={lvl:'M',cat:'',du:'',au:''};render();return}
+  if(d.op){RELEVE=false;FICHE=d.op;FICHESEL=null;render();setTimeout(()=>$('.fiche .fermer')?.focus(),30);return}
   if(d.cat){openCat=openCat===d.cat?null:d.cat;render();return}
   if(d.qcat){setRule(d.qcat,d.c);render();return}
   if(d.heures){HEURES=d.heures;render();setTimeout(()=>$('#heuresIn')?.focus(),30);return}
@@ -2757,7 +3002,10 @@ document.addEventListener('click',async e=>{
   if(d.act==='revok'){revImport();return}
   if(d.act==='revcancel'){revDraft=null;render();return}
   if(d.act==='exitdemo'){exitDemo();render();return}
-  if(d.act==='wipe'){if(confirm('Effacer toutes vos opérations, règles et réglages ? Pensez à sauvegarder avant.')){S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));S=blank();S.onboarded=true;reports.length=0;P=null;save();aller('accueil')}return}
+  if(d.act==='choisirsauv'){$('#restorefile2')?.click();return}
+  if(d.act==='wipe'){WIPE=true;render();return}
+  if(d.act==='wipeno'){WIPE=false;render();return}
+  if(d.act==='wipeok'){WIPE=false;S.ops.forEach(o=>dirtyMonths.add(o.date.slice(0,7)));S=blank();S.onboarded=true;reports.length=0;P=null;save();aller('accueil');return}
 });
 document.addEventListener('change',e=>{
   const t=e.target, d=t.dataset;
@@ -2767,6 +3015,8 @@ document.addEventListener('change',e=>{
   if(d.opcat){const o=BYID[d.opcat];if(o&&t.value){LIGNES.add(d.gk);o.cat=t.value;dirtyMonths.add(o.date.slice(0,7));stateDirty=true;save();render()}return}
   if(d.moveimp){deplacerReleve(d.moveimp,t.value);return}
   if(d.qsel){if(t.value==='__new'){t.value='';ouvrirRubrique({de:'question',m:d.qsel});return}if(t.value){setRule(d.qsel,t.value);render()}return}
+  if(t.id==='filtreCat'){FIL.cat=t.value;render();return}
+  if(t.id==='filtreDu'||t.id==='filtreAu'){FIL[t.id==='filtreDu'?'du':'au']=t.value;render();return}
   if(t.id==='ficheCat'){if(t.value==='__new'){t.value=FICHESEL||'';ouvrirRubrique({de:'fiche',id:FICHE})}else FICHESEL=t.value||null;return}
   if(d.repacct){let v=t.value;const r=reports.find(x=>x.imp===d.repacct);if(!r)return;
     if(v==='__new'){const n=(prompt('Nom du compte')||'').trim();if(!n){render();return}v=addAccount({name:n.slice(0,40),type:guessType('','',n)}).id;r.isNew=true}
@@ -2778,6 +3028,7 @@ document.addEventListener('change',e=>{
   if(d.inc){S.incomeSource=d.inc;save();render();return}
   if(d.set){S.settings[d.set]=t.value===''?'':Math.max(0,+t.value||0);save();if(MODAL)render();return}
   if(t.id==='restorefile'&&t.files.length){restore_(t.files[0]);t.value='';return}
+  if(t.id==='restorefile2'&&t.files.length){const f=t.files[0];t.value='';restore_(f).then(()=>aller('reglages','donnees'));return}
   if(t.id==='lecteurfile'&&t.files.length){importerLecteur(t.files[0]);t.value='';return}
   if(d.cs){COLLE.signe=d.cs;lireColle();render();return}
   if(t.id==='colleAcct'&&COLLE){COLLE.texte=$('#colleTxt')?.value??COLLE.texte;COLLE.acct=t.value;if(COLLE.apercu)lireColle();render();return}
@@ -2798,6 +3049,35 @@ document.addEventListener('input',e=>{
   z.classList.toggle('over',ev==='dragover');
   if(ev==='drop'&&e.dataTransfer.files.length){ if(z.dataset.drop==='rev'){if(demo)exitDemo();readRev(e.dataTransfer.files[0])} else importFiles([...e.dataTransfer.files]); }
 }));
+/* ============ Bulles d'explication ============
+   Sur ordinateur : en passant la souris. Sur téléphone : en gardant le doigt posé un instant (un simple toucher agit comme d'habitude). */
+let BULLE_T=null, BULLE_LONG=0;
+function montrerBulle(el){
+  const b=document.getElementById('bulle'); if(!b||!el||!el.dataset.tip) return;
+  b.textContent=el.dataset.tip; b.classList.add('on');
+  const r=el.getBoundingClientRect(), w=b.offsetWidth, vw=document.documentElement.clientWidth;
+  b.style.top=Math.round(r.bottom+8)+'px';
+  b.style.left=Math.round(Math.max(8,Math.min(r.left+r.width/2-w/2,vw-w-8)))+'px';
+}
+function cacherBulle(){clearTimeout(BULLE_T);const b=document.getElementById('bulle');if(b)b.classList.remove('on')}
+const cibleBulle=e=>e.target.closest&&e.target.closest('[data-tip]');
+document.addEventListener('mouseover',e=>{const c=cibleBulle(e);if(c&&matchMedia('(hover:hover)').matches)montrerBulle(c)});
+document.addEventListener('mouseout',e=>{if(cibleBulle(e))cacherBulle()});
+document.addEventListener('focusin',e=>{const c=cibleBulle(e);if(c)montrerBulle(c)});
+document.addEventListener('focusout',cacherBulle);
+document.addEventListener('touchstart',e=>{const c=cibleBulle(e);cacherBulle();if(!c)return;
+  BULLE_T=setTimeout(()=>{BULLE_LONG=Date.now();montrerBulle(c);BULLE_T=setTimeout(cacherBulle,4000)},450)},{passive:true});
+['touchend','touchmove','touchcancel'].forEach(ev=>document.addEventListener(ev,()=>{if(ev!=='touchend')cacherBulle();else clearTimeout(BULLE_T)},{passive:true}));
+document.addEventListener('click',e=>{if(Date.now()-BULLE_LONG<900&&cibleBulle(e)){e.preventDefault();e.stopImmediatePropagation()}},true);
+document.addEventListener('contextmenu',e=>{if(cibleBulle(e)&&Date.now()-BULLE_LONG<2000)e.preventDefault()});
+
+/* Message de confirmation, en haut de l'écran */
+let TOAST_T=null;
+function toast(msg,ok){
+  const t=document.getElementById('toast'); if(!t) return;
+  t.textContent=msg; t.className='on '+(ok===false?'attention':'ok');
+  clearTimeout(TOAST_T); TOAST_T=setTimeout(()=>{t.className=''},6000);
+}
 /* ============ Exemple fictif ============ */
 /* Douze mois complets jusqu'au mois dernier, un compte perso et un compte pro. Données fixes (tirage à graine).
    Mois affiché : au-dessus de l'objectif, restaurants qui dérapent, défi réussi, remboursement d'achat, frais kilométriques,
@@ -3056,6 +3336,22 @@ function periodeBarAccueil(PA){
   <div class="mois"><button class="fleche" data-ashift="-1" aria-label="Période précédente"><i data-lucide="chevron-left"></i></button>
   <h2>${nomPeriode(PA)}</h2><button class="fleche" data-ashift="1" aria-label="Période suivante"><i data-lucide="chevron-right"></i></button></div>`;
 }
+/* Année : les mois où il est resté le plus d'argent, et ceux où il en est le moins resté */
+function blocMeilleursMois(PA){
+  if(PA.lvl!=='Y') return '';
+  const L=[];
+  for(let m=1;m<=12;m++){
+    const pm={lvl:'M',y:PA.y,m}, R=aggRaw(pm); if(!R.any) continue;
+    const n=SAL?0:agg(pm,'pro').revenuNet; L.push({m,b:n+R.perso.income-agg(pm,'perso').net});
+  }
+  if(L.length<2) return '';
+  L.sort((a,b)=>b.b-a.b); const k=Math.min(3,Math.floor(L.length/2));
+  const lig=x=>`<div class="ligne"><span>${esc(MOIS[x.m-1][0].toUpperCase()+MOIS[x.m-1].slice(1))}</span><b>${signed(x.b)}</b></div>`;
+  return `<section class="carte mois-extremes"><h3>Vos meilleurs et vos plus difficiles mois</h3>
+    <p class="aide">Pour chaque mois : ce qui est entré, moins ce que vous avez dépensé.</p>
+    <div class="mx mx-bon"><p class="mx-t"><i data-lucide="trophy"></i>Vos meilleurs mois</p>${L.slice(0,k).map(lig).join('')}</div>
+    <div class="mx mx-dur"><p class="mx-t"><i data-lucide="cloud-rain"></i>Vos mois les plus difficiles</p>${L.slice(-k).reverse().map(lig).join('')}</div></section>`;
+}
 function vAccueil(){
   const PA={...P,lvl:AL}, nm=bounds(PA)[2], mens=AL==='M', PF={lvl:'M',...endOf(PA)};
   const X=agg(PA,'pro'), Pe=agg(PA,'perso'), part=moisPartiel(PA), V=netVise()*nm, H=heures()*nm;
@@ -3079,9 +3375,9 @@ function vAccueil(){
   else if(Pe.any) gagne=`<section class="carte"><h3>Ce que vous avez gagné</h3><p class="aide">Aucun encaissement de votre activité ${mens?'ce mois-ci':'sur cette période'}.${S.accounts.some(a=>a.type!=='perso')?'':' Indiquez dans les réglages quel compte sert à votre activité.'}</p>${balanceBloc(0,Pe,PA)}</section>`;
   if(SAL) gagne=Pe.any?`<section class="carte gagne"><h3>Votre ${mens?'mois':AL==='Q'?'trimestre':'année'}</h3>${balanceBloc(0,Pe,PA)}</section>`:'';
   const q=S.accounts.filter(a=>!a.confirmed);
-  return (q.length?`<section class="carte verifier">${q.map(acctAsk).join('')}</section>`:'')+lienAide()+periodeBarAccueil(PA)+blocClassement(PA)+(!X.any&&!Pe.any?`<p class="aide centre">Aucune opération ${mens?'ce mois-ci':'sur cette période'}.</p>`:'')+gagne+`
+  return (q.length?`<section class="carte verifier">${q.map(acctAsk).join('')}</section>`:'')+periodeBarAccueil(PA)+blocMeilleursMois(PA)+blocClassement(PA)+(!X.any&&!Pe.any?`<p class="aide centre">Aucune opération ${mens?'ce mois-ci':'sur cette période'}.</p>`:'')+gagne+`
   ${Pe.any?`<section class="carte argent"><h3>Où part votre argent</h3>
-    <p class="phrase">${eur0(Pe.net)} dépensés côté perso</p>
+    <p class="phrase">${eur0(Pe.net)} dépensés${SAL?'':' côté perso'}</p>
     <div class="rubriques">${lignes.map(([cid,e])=>{const c=catById(cid), pend=cid==='_pending', d=pend||!mens?null:derapage(cid,e.net,P), open=openCat===cid;
       return `<button class="rub${d?' derape':''}" data-cat="${cid}" aria-expanded="${open}"><i data-lucide="${pend?'circle-help':c?.icon||'circle'}"></i>
         <span class="rub-nom">${esc(pend?'À vérifier':c?.name||cid)}${d?`<span class="rub-mention">${esc(d.txt)}</span>`:''}${e.surplus>0.005?`<span class="rub-sous">dont ${eur0(e.ref)} de remboursements</span>`:''}</span>
@@ -3134,7 +3430,7 @@ function vReglages(){
   <button class="carte lien-objectifs" data-tab="objectifs"><span><span class="r-t">${SAL?'Vos limites de dépenses':'Votre objectif, votre temps de travail et vos limites'}</span><span class="aide">${SAL?'Elles se règlent':'Ils se règlent'} dans l’onglet Mes objectifs.</span></span><i data-lucide="chevron-right"></i></button>
   <section class="carte" id="reserve"><h3>Votre réserve</h3>
     <label class="champ">Épargne disponible (€)<input type="number" inputmode="numeric" min="0" step="100" data-set="epargne" value="${s.epargne||''}" placeholder="0"></label>
-    ${st&&st.autonomie!=null?`<p class="phrase">Votre réserve couvre ${fmt1(st.autonomie)} mois de dépenses.</p>`:'<p class="aide">Elle indique combien de mois vous tiendriez sans rien encaisser.</p>'}</section>
+    ${st&&st.autonomie!=null?`<p class="phrase">Votre réserve couvre ${fmt1(st.autonomie)} mois de dépenses.</p>`:`<p class="aide">Elle indique combien de mois vous tiendriez ${SAL?'sans aucun salaire':'sans rien encaisser'}.</p>`}</section>
   ${S.accounts.length?`<section class="carte" id="comptes"><h3>Vos comptes</h3>
     ${S.accounts.map(a=>`<div class="compte-reg"><p class="cr-nom">${esc(a.name)} <button class="lien" data-renacct="${a.id}">Renommer</button></p>
       ${SAL?'':`      <p class="aide">Ce compte est-il professionnel, personnel, ou sert-il à tout ?</p>
@@ -3154,26 +3450,34 @@ function vReglages(){
       <li>Sur l’autre appareil, ouvrez l’application, récupérez le fichier dans Drive, puis touchez « Restaurer une sauvegarde » et choisissez-le.</li></ol>
       <p class="aide">Ce n’est pas automatique : refaites-le après chaque ajout de relevés, et gardez toujours la sauvegarde la plus récente. Autre possibilité : ajouter vos opérations sur chaque appareil avec « Coller mes opérations » (celles déjà présentes ne sont pas comptées deux fois), chaque appareil gardant alors sa propre copie.</p></details>
     <div class="boutons"><button class="btn" data-act="backup">Sauvegarder mes données</button><label class="btn secondaire">Restaurer une sauvegarde<input type="file" id="restorefile" accept=".json,application/json" hidden></label></div>
+    ${RESTAURER?`<div class="question"><p class="q-t">Remplacer vos données actuelles par cette sauvegarde ?</p><p class="q-s">Ce qui est enregistré ici sera remplacé.</p><div class="choix gros"><button class="choix-btn" data-act="restok">Oui, restaurer</button><button class="choix-btn" data-act="restno">Non, garder mes données</button></div></div>`:''}
     ${backupMsg?`<p class="ok-txt">${esc(backupMsg)}</p>`:''}
-    <p class="aide">Le dictionnaire s’enrichit de temps en temps. Pour l’appliquer à vos opérations déjà ajoutées (sans toucher à ce que vous avez corrigé) :</p>
-    <div class="boutons"><button class="btn secondaire" data-act="reclasser">Reclasser mes suppositions</button></div>
-    <button class="lien danger" data-act="wipe">Tout effacer</button></section>
+    <h4>Classement automatique</h4>
+    <p class="aide">Quand l’application ne connaît pas un commerçant, elle devine sa rubrique : c’est écrit « classé automatiquement ». Elle apprend de nouveaux commerçants avec le temps. Ce bouton refait ces devinettes avec ses connaissances les plus récentes. Vos propres choix ne changent jamais.</p>
+    <div class="boutons"><button class="btn secondaire" data-act="reclasser">Refaire le classement automatique</button></div>
+    <h4>Repartir de zéro</h4>
+    <p class="aide">Supprime de cet appareil toutes vos opérations, vos choix et vos réglages. C’est définitif : faites d’abord une sauvegarde.</p>
+    ${WIPE?`<div class="question"><p class="q-t">Tout supprimer de cet appareil ?</p><p class="q-s">Opérations, choix et réglages seront effacés, sans retour possible.</p><div class="choix gros"><button class="choix-btn" data-act="wipeok">Oui, tout effacer</button><button class="choix-btn" data-act="wipeno">Non, tout garder</button></div></div>`:`<button class="lien danger" data-act="wipe">Effacer toutes mes données</button>`}</section>
   ${annees.length?`<section class="carte"><h3>Votre année en revue</h3><div class="boutons">${annees.slice(0,3).map(y=>`<button class="btn secondaire" data-act="review" data-year="${y}">Année ${y}</button>`).join('')}</div></section>`:''}
   <section class="carte"><h3>Présentation</h3><button class="btn secondaire" data-act="relancer">Revoir la présentation</button></section>
   <details class="carte repli" id="avances"><summary>Réglages avancés</summary>
     ${SAL?'':`<label class="champ">La part à garder de côté se calcule sur<select class="grand" data-assiette="1"><option value="ca"${s.assiette!=='resultat'?' selected':''}>ce que vous encaissez</option><option value="resultat"${s.assiette==='resultat'?' selected':''}>ce qui reste après les frais</option></select></label>`}
     ${S.accounts.filter(a=>a.type==='pro').map(a=>`<label class="champ">Solde du compte ${esc(a.name)} (€)<input type="number" inputmode="decimal" step="0.01" data-solde="${a.id}" value="${a.solde!=null?a.solde:''}"></label>
       <label class="champ">À la date du<input type="date" data-soldedate="${a.id}" value="${esc(a.soldeDate||'')}"></label>`).join('')}
-    <h4>Règles apprises</h4>
-    ${r.length?r.map(([m,c])=>`<div class="regle"><span>${esc(ruleName(m))}</span><select class="grand" data-rule="${esc(m)}" aria-label="Rubrique pour ${esc(m)}">${catOptions(c)}</select><button class="lien" data-delrule="${esc(m)}">Oublier</button></div>`).join(''):'<p class="aide">Aucune pour l’instant.</p>'}
-    <h4 id="lecteurs">Lecteurs de relevés</h4>
-    <p class="aide">Si les relevés de votre banque sont mal lus, Claude peut écrire un lecteur. Importez le relevé, touchez « Copier la demande pour Claude » dans son aide à la lecture, collez-la dans Claude, puis collez sa réponse ici.</p>
-    <textarea id="readerIn" class="anon" placeholder="Collez ici la réponse de Claude, qui commence par { et finit par }"></textarea>
-    <button class="btn secondaire" data-act="addreader">Ajouter ce lecteur</button>
+    <h4>Vos choix mémorisés</h4>
+    <p class="aide">Quand vous rangez un commerçant dans une rubrique, l’application s’en souvient : ses prochaines opérations iront toutes seules dans cette rubrique. Ici, vous pouvez changer la rubrique retenue pour un commerçant. « Oublier ce choix » efface ce souvenir : l’application ne rangera plus ce commerçant d’office. Ses opérations seront rangées de nouveau par l’application, ou vous seront redemandées dans « À vérifier ».</p>
+    ${r.length?r.map(([m,c])=>`<div class="regle"><span>${esc(ruleName(m))}</span><select class="grand" data-rule="${esc(m)}" aria-label="Rubrique pour ${esc(m)}">${catOptions(c)}</select><button class="lien" data-delrule="${esc(m)}" aria-label="Oublier le choix pour ${esc(ruleName(m))}">Oublier ce choix</button></div>`).join(''):'<p class="aide">Aucun pour l’instant.</p>'}
+    <h4 id="lecteurs">Un relevé est mal lu ?</h4>
+    <p class="aide">Si des montants ou des noms sont faux ou manquants après l’ajout d’un relevé, on peut apprendre à l’application à lire les relevés de votre banque. On appelle cela une « méthode de lecture ».</p>
+    <ol class="aide liste-etapes"><li>Ajoutez le relevé dans « Importer », puis touchez « Copier la demande pour Claude » dans l’aide qui s’affiche.</li>
+      <li>Collez cette demande dans Claude (l’assistant). Il répond par un texte qui commence par { et finit par }.</li>
+      <li>Collez ce texte dans la case ci-dessous, puis touchez « Ajouter cette méthode de lecture ».</li></ol>
+    <textarea id="readerIn" class="anon" placeholder="Collez ici la réponse de Claude (elle commence par { et finit par })"></textarea>
+    <button class="btn secondaire" data-act="addreader">Ajouter cette méthode de lecture</button>
     ${readerMsg?`<p class="${readerErr?'ko-txt':'ok-txt'}">${esc(readerMsg)}</p>`:''}
-    ${(S.readers||[]).map((x,i)=>`<div class="regle"><span>${esc(x.nom)}</span><button class="lien" data-lexport="${i}">Exporter ce lecteur</button><button class="lien" data-delreader="${i}">Supprimer</button></div>`).join('')}
-    <label class="btn secondaire">Importer un lecteur<input type="file" id="lecteurfile" accept=".json,application/json" hidden></label>
-    <p class="aide">Un lecteur reçu d’une personne qui a la même banque s’applique automatiquement aux relevés de cette banque.</p>
+    ${(S.readers||[]).map((x,i)=>`<div class="regle"><span>${esc(x.nom)}</span><button class="lien" data-lexport="${i}">Enregistrer dans un fichier pour un proche</button><button class="lien" data-delreader="${i}">Supprimer</button></div>`).join('')}
+    <label class="btn secondaire">Ajouter une méthode de lecture reçue (fichier)<input type="file" id="lecteurfile" accept=".json,application/json" hidden></label>
+    <p class="aide">Une personne qui a la même banque que vous peut vous envoyer sa méthode de lecture sous forme de fichier : ajoutez-la ici, elle s’appliquera toute seule à vos relevés. Dans l’autre sens, « Enregistrer dans un fichier pour un proche » crée ce fichier à lui envoyer.</p>
   </details>`;
 }
 
@@ -3319,7 +3623,7 @@ function vBilan(){
         <span class="rep-barre"><span style="width:${Math.max(1,v/max*100)}%"></span></span>
         ${e?`<span class="rep-lim ${e.etat}">Limite : ${eur0(e.dep)} sur ${eur0(e.lim)} ${e.mot}${e.msg?`. ${esc(e.msg)}`:''}</span>${barreLimite(e)}`:''}</button>`}).join('')}</div>`
     :'<p class="aide">Aucune dépense sur cette période.</p>'}</section>
-  <section class="carte evolution"><h3>Évolution</h3><p class="aide">Vos dépenses ${U==='pro'?'de l’activité':'perso'}, mois par mois : le mois sous chaque barre, le montant au-dessus. Touchez une barre pour voir ce mois.</p>
+  <section class="carte evolution"><h3>Évolution</h3><p class="aide">Vos dépenses${SAL?'':U==='pro'?' de l’activité':' perso'}, mois par mois : le mois sous chaque barre, le montant au-dessus. Touchez une barre pour voir ce mois.</p>
     ${barres(moisBilan(PB),q=>bilan(q,U).total,q=>PB.lvl==='M'&&q.y===PB.y&&q.m===PB.m,moisBilan(PB).length>6?'defile':'')}</section>
   <section class="carte ecarts"><h3>Par rapport ${PB.lvl==='M'?'au mois':PB.lvl==='Q'?'au trimestre':'à l’année'} précédent${PB.lvl==='Y'?'e':''}</h3>
     ${vus.length?vus.map(x=>`<button class="ecart ${x.d>0?'hausse':'baisse'}" data-bcat="${x.cid}"><span class="e-nom">${esc(nomRub(x.cid))} : ${x.a>0.005?`${eur0(x.a)} ${L0}`:`rien ${L0}`}${x.b>0.005?`, contre ${eur0(x.b)} ${L1}`:`, rien ${L1}`}</span><span class="e-fleche" aria-label="${x.d>0?'en hausse':'en baisse'}">${x.d>0?'↑':'↓'}</span></button>`).join('')
